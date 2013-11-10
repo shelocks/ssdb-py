@@ -1,4 +1,7 @@
 # encoding=utf-8
+"""
+Python client for ssdb
+"""
 
 import socket
 from itertools import izip, chain
@@ -19,6 +22,15 @@ zscan_key = ['zscan', 'zrscan', 'zrange', 'zrrange', 'multi_zget']
 
 
 class SSDBResponse(object):
+    """
+    A response from ssdb server.
+
+    parameters:
+        code:result code
+        data_or_message:data if code is 'ok';other message
+
+    """
+
     def __init__(self, code='', data_or_message=None):
         self.code = code
         self.data = None
@@ -40,7 +52,17 @@ class SSDBResponse(object):
 
 
 class SSDB(object):
-    def __init__(self, host='', port=8888, socket_timeout=None, max_connections=1):
+    """
+    A client for ssdb
+
+    parameters:
+        host:host to connect
+        port:port to connect
+        socket_timeout:socket_timeout to set
+        max_connections:connection pool's max connection count
+    """
+
+    def __init__(self, host='127.0.0.1', port=8888, socket_timeout=None, max_connections=1):
         self.host = host
         self.port = port
         self.socket_timeout = socket_timeout
