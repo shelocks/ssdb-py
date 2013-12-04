@@ -144,6 +144,19 @@ class SSDB(object):
         """
         return self.request("scan", [key_lower, key_upper, limit])
 
+    def scan_iterator(self, key_lower):
+        """
+        return a key-value tuple iterator
+        """
+        start_key = key_lower
+        while start_key is not None:
+            response = self.scan(start_key, "", 1000)
+            index, items = response.data['index'], response.data['items']
+            start_key = index[-1] if index else None
+            for key in index:
+                yield (key, items[key])
+
+
     def rscan(self, key_upper, key_lower, limit):
         """
         list key-value pairs in key range (key_upper,key_lower] in reverse order
