@@ -146,7 +146,7 @@ class SSDB(object):
 
     def scan_iterator(self, key_lower):
         """
-        return a key-value tuple iterator
+        return a key-value tuple iterator.
         """
         start_key = key_lower
         while start_key is not None:
