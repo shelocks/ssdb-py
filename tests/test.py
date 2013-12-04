@@ -6,6 +6,16 @@ class SSDBTest(unittest.TestCase):
     def setUp(self):
         self.ssdb = ssdb.SSDB('127.0.0.1', 8888)
 
+    def test_scan_iter(self):
+        data = {}
+        for i in range(0, 100):
+            key = "_".join(["scan_iter_key", str(i)])
+            value = "_".join(["scan_iter_value", str(i)])
+            data[key] = value
+            self.ssdb.set(key, value)
+        for item in self.ssdb.scan_iterator(""):
+            self.assertEqual(data[item[0]], item[1])
+
     def test_del(self):
         self.ssdb.set("key1", "value1")
         r = self.ssdb.delete("key1")
@@ -37,7 +47,7 @@ class SSDBTest(unittest.TestCase):
         self.ssdb.set("incr_key", 1)
         r = self.ssdb.incr("incr_key", 1)
 
-        self.assertEqual('ok',r.code)
+        self.assertEqual('ok', r.code)
         self.assertEqual(2, r.data)
         self.ssdb.delete("incr_key")
 
