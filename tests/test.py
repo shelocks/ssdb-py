@@ -1,10 +1,20 @@
 import unittest
 import ssdb
+import time
 
 
 class SSDBTest(unittest.TestCase):
     def setUp(self):
         self.ssdb = ssdb.SSDB('127.0.0.1', 8888)
+
+    def test_set_with_ttl(self):
+        r = self.ssdb.set("key1_ttl", "value1_ttl", 1)
+        self.assertEqual("ok", r.code)
+        r = self.ssdb.get("key1_ttl")
+        self.assertEqual("value1_ttl", r.data)
+        time.sleep(1)
+        r = self.ssdb.get("key1_ttl")
+        self.assertEqual("not_found", r.code)
 
     def test_scan_iter(self):
         data = {}
