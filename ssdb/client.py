@@ -7,7 +7,7 @@ import socket
 from itertools import izip, chain
 import os
 
-update_cmd = ['set', 'zset', 'hset', 'del', 'zdel', 'hdel', 'multi_set', 'multi_del', 'multi_hset', 'multi_hdel',
+update_cmd = ['set', 'setx', 'zset', 'hset', 'del', 'zdel', 'hdel', 'multi_set', 'multi_del', 'multi_hset', 'multi_hdel',
               'multi_zset', 'multi_zdel']
 
 single_get_cmd = ['get', 'hget']
@@ -69,14 +69,19 @@ class SSDB(object):
         self.max_connections = max_connections
         self.connection_pool = ConnectionPool(self.host, self.port, self.socket_timeout, self.max_connections)
 
-    def set(self, key, value):
+    def set(self, key, value, ttl=None):
         """
         Set key's value.
+
+        parameters:
+            ttl: time to live of key's value
 
         return:
             'ok' code if success,other code failed.
         """
-        return self.request("set", [key, value])
+        if not ttl or int(ttl) == -1:
+            return self.request("set", [key, value])
+        return self.request("setx", [key, value, int(ttl)])
 
     def get(self, key):
         """
